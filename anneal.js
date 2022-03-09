@@ -28,11 +28,29 @@ screen.width = screenEdge;
 screen.height = screenEdge;
 
 
-let neighs;
+const maxTemp = 10;
+const minFreq = 0.02;
 const Cmax = 100;
 const Rmax = 100;
+let temp;
+let field;
+let inter;
+let freq;
+let neighs;
 let R, C;
 function updater() {
+	temp = maxTemp * tempSlider.value / 1000;
+	tempDisplay.innerHTML = temp;
+
+	field = (fieldSlider.value - 50) / 50;
+	fieldDisplay.innerHTML = field;
+
+	inter = interSlider.value;
+	interDisplay.innerHTML = inter;
+
+	freq = minFreq * 2 ** (10 * (1 - freqSlider.value / 100));
+	freqDisplay.innerHTML = (1 / freq).toFixed(2);
+
     C = 4 * (3 + (sizeSlider.value * 2));
     if (neighsSlider.value == 0) {
         neighs = 3;
@@ -48,51 +66,21 @@ function updater() {
 	sizeDisplay.innerHTML = C;
 	pixelSize = screenEdge / C;
 }
+tempSlider.oninput = updater;
+fieldSlider.oninput = updater;
+interSlider.oninput = updater;
+freqSlider.oninput = updater;
 neighsSlider.oninput = updater;
 sizeSlider.oninput = updater;
 updater();
-
-
-// Based on std of collection of all possible energies, it
-// seems like critial temperature is sqrt(number of neighs)
-const maxTemp = 10;
-let temp;
-tempSlider.oninput = function() {
-	temp = maxTemp * tempSlider.value / 1000;
-	tempDisplay.innerHTML = temp;
-}
-tempSlider.oninput();
-
-
-let field;
-fieldSlider.oninput = function() {
-	field = (fieldSlider.value - 50) / 50;
-	fieldDisplay.innerHTML = field;
-}
-fieldSlider.oninput();
-
-
-let inter;
-interSlider.oninput = function() {
-	inter = interSlider.value;
-	interDisplay.innerHTML = inter;
-}
-interSlider.oninput();
-
-
-const minFreq = 0.02;
-let freq;
-freqSlider.oninput = function() {
-	freq = minFreq * 2 ** (10 * (1 - freqSlider.value / 100));
-	freqDisplay.innerHTML = (1 / freq).toFixed(2);
-}
-freqSlider.oninput();
 
 
 const context = screen.getContext("2d");
 function frameValue(value, minLimit, maxLimit) {
     return Math.max(Math.min(value, maxLimit), minLimit);
 }
+
+
 function drawFilledPath(path, color) {
     context.fillStyle = color;
     context.beginPath();
@@ -109,18 +97,20 @@ function drawFilledPath(path, color) {
     context.closePath();
     context.fill();
 }
+
+
 function drawTriangle(i, j, color) {
-    let path = []
-    for (let k of [0, 1, 2]) {
-        path.push(
-            [
-                (j - 1 + k) * pixelSize,
-                (i + (i + j + k) % 2) * 2 * pixelSize,
-            ],
-        );
-    }
+    let x0 = j * pixelSize;
+    let y0 = i * 2 * pixelSize;
+    let path = [
+        [x0, (i + (i + j + 1) % 2) * 2 * pixelSize],
+        [x0 - pixelSize, (i + (i + j) % 2) * 2 * pixelSize],
+        [x0 + pixelSize, (i + (i + j) % 2) * 2 * pixelSize],
+    ];
     drawFilledPath(path, color);
 }
+
+
 function drawRectangle(i, j, color) {
     context.fillStyle = color;
     context.fillRect(
@@ -130,9 +120,11 @@ function drawRectangle(i, j, color) {
         Math.ceil(pixelSize),
     );
 }
+
+
 function drawHexagon(i, j, color) {
-    x0 = (j + 0.5 * (i % 2)) * pixelSize;
-    y0 = i * pixelSize;
+    let x0 = (j + 0.5 * (i % 2)) * pixelSize;
+    let y0 = i * pixelSize;
     let path = [
         [x0, y0 + pixelSize * 2 / 3],
         [x0 - pixelSize / 2, y0 + pixelSize / 3],
@@ -145,11 +137,11 @@ function drawHexagon(i, j, color) {
 }
 
 
+// These will be used by the main()-function, in
+// case the real values suddenly are altered.
 let mainNeighs = neighs;
 let mainR = R;
 let mainC = C;
-
-
 let values = [];
 for (let i = 0; i < Rmax; i++) {
     values.push([]);
@@ -173,12 +165,12 @@ function drawSpin(i, j, spin) {
         drawHexagon(i, j, color);
         if (i == 0) {
             drawHexagon(mainR, j, color);
-            if (j == 0) {
-                drawHexagon(mainR, mainC, color);
-            }
         }
         if (j == 0) {
             drawHexagon(i, mainC, color);
+        }
+        if (i == 0 && j == 0) {
+            drawHexagon(mainR, mainC, color);
         }
     }
 }
@@ -206,40 +198,25 @@ function getEnergyChange(i, j) {
     let north = values[i_next][j];
     let south = values[i_prev][j];
 
-    let magneticDelta = 2 * field * center;
-    let interactiveDelta;
+    let neighbours = east + west;
     if (mainNeighs == 3) {
-        interactiveDelte = 2 * inter * center * (
-            east + west + ((i + j) % 2 ? north : south)
-        );
+        neighbours += ((i + j) % 2 ? north : south);
     } else if (mainNeighs == 4) {
-        interactiveDelte = 2 * inter * center * (
-            east + west + north + south
-        );
+        neighbours += north + south;
     } else { 
-        let northEast = values[i_next][j_next];
-        let northWest = values[i_next][j_prev];
-        let northern = north + (i % 2 == 0 ? northWest : northEast);
-        let southEast = values[i_prev][j_next];
-        let southWest = values[i_prev][j_prev];
-        let southern = south + (i % 2 == 0 ? southWest : southEast);
-        interactiveDelte = 2 * inter * center * (
-            east + west + northern + southern
-        );
+        let northern = north + values[i_next][i % 2 ? j_next : j_prev];
+        let southern = south + values[i_prev][i % 2 ? j_next : j_prev];
+        neighbours += northern + southern;
     }
-    return magneticDelta + interactiveDelte;
+
+    let interactiveDelta = 2 * inter * center * neighbours;
+    let magneticDelta = 2 * field * center;
+    return magneticDelta + interactiveDelta;
 }
 
 
 function somethingHasChanged() {
-    if (neighs != mainNeighs) {
-        return true;
-    } else if (mainC != C) {
-        return true;
-    } else if (mainR != R) {
-        return true;
-    }
-    return false;
+    return neighs != mainNeighs || C != mainC || R != mainR;
 }
 
 
