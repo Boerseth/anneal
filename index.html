@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>The 2D Ising model</title>
+    <meta charset="UTF-8">
+    <title>The 2D Ising model</title>
 </head>
 <body>
 <h1>The 2D Ising model, 3/4/6 neighbours</h1>
 <div style="display: flex; padding-top: 0px; padding-bottom: 10px;">
-	<div style="flex: left; width: 8ch; text-align: right;"><em>N</em> = </div>
-	<div id="sizeDisplay" style="flex: left; width: 5ch;"></div>
-	<input id="size" type="range" min="0" max="11" value="11" style="flex: left; width: 300;">
+    <div style="flex: left; width: 8ch; text-align: right;"><em>N</em> = </div>
+    <div id="sizeDisplay" style="flex: left; width: 5ch;"></div>
+    <input id="size" type="range" min="0" max="11" value="11" style="flex: left; width: 300;">
 </div>
 <div style="display: flex; padding-top: 0px; padding-bottom: 10px;">
-	<div style="flex: left; width: 8ch; text-align: right;"><em>neighs</em> = </div>
-	<div id="neighsDisplay" style="flex: left; width: 5ch;"></div>
-	<input id="neighs" type="range" min="0" max="2" value="1" style="flex: left; width: 300;">
+    <div style="flex: left; width: 8ch; text-align: right;"><em>neighs</em> = </div>
+    <div id="neighsDisplay" style="flex: left; width: 5ch;"></div>
+    <input id="neighs" type="range" min="0" max="2" value="1" style="flex: left; width: 300;">
 </div>
 <canvas id="screen"></canvas>
 <div style="display: flex; padding-top: 0px; padding-bottom: 10px;">
-	<div style="flex: left; width: 5ch; text-align: right;"><em>v</em> = </div>
-	<div id="freqDisplay" style="flex: left; width: 5ch;"></div>
-	<input id="freq" type="range" min="1" max="100" value="50" style="flex: left; width: 300;">
+    <div style="flex: left; width: 5ch; text-align: right;"><em>v</em> = </div>
+    <div id="freqDisplay" style="flex: left; width: 5ch;"></div>
+    <input id="freq" type="range" min="1" max="100" value="50" style="flex: left; width: 300;">
 </div>
 <div style="display: flex; padding-top: 0px; padding-bottom: 10px;">
-	<div style="flex: left; width: 5ch; text-align: right;"><em>T</em> = </div>
-	<div id="tempDisplay" style="flex: left; width: 5ch;"></div>
-	<input id="temp" type="range" min="0" max="1000" value="227" style="flex: left; width: 300;">
+    <div style="flex: left; width: 5ch; text-align: right;"><em>T</em> = </div>
+    <div id="tempDisplay" style="flex: left; width: 5ch;"></div>
+    <input id="temp" type="range" min="0" max="1000" value="227" style="flex: left; width: 300;">
 </div>
 <div style="padding-left: 30px; padding-top: 0px; padding-bottom: 10px;">
-	H(σ) = - <big><big>Σ</big></big> J<sub>ij</sub> σ<sub>i</sub> σ<sub>j</sub> - μ <big><big>Σ</big></big> h<sub>i</sub> σ<sub>i</sub>
+    H(σ) = - <big><big>Σ</big></big> J<sub>ij</sub> σ<sub>i</sub> σ<sub>j</sub> - μ <big><big>Σ</big></big> h<sub>i</sub> σ<sub>i</sub>
 </div>
 <div style="display: flex; padding-top: 0px; padding-bottom: 10px;">
-	<div style="flex: left; width: 5ch; text-align: right;"><em>μ</em> = </div>
-	<div id="fieldDisplay" style="flex: left; width: 5ch;"></div>
-	<input id="field" type="range" min="0" max="100" value="50" style="flex: left; width: 300;">
+    <div style="flex: left; width: 5ch; text-align: right;"><em>μ</em> = </div>
+    <div id="fieldDisplay" style="flex: left; width: 5ch;"></div>
+    <input id="field" type="range" min="0" max="100" value="50" style="flex: left; width: 300;">
 </div>
 <div style="display: flex; padding-top: 0px; padding-bottom: 10px;">
-	<div style="flex: left; width: 5ch; text-align: right;"><em>J<sub>ij</sub></em> = </div>
-	<div id="interDisplay" style="flex: left; width: 5ch;"></div>
-	<input id="inter" type="range" min="-1" max="1" value="1" style="flex: left; width: 300;">
+    <div style="flex: left; width: 5ch; text-align: right;"><em>J<sub>ij</sub></em> = </div>
+    <div id="interDisplay" style="flex: left; width: 5ch;"></div>
+    <input id="inter" type="range" min="-1" max="1" value="1" style="flex: left; width: 300;">
 </div>
 </body>
 <h2>Legend:</h2>
 <ul>
-	<li><em>N</em>: Size of grid</li>
-	<li><em>neighs</em>: Number of neighbours (3, 4, 6)</li>
-	<li><em>v</em>: Speed of animation</li>
-	<li><em>T</em>: Temperature of simulation</li>
-	<li><em>μ</em>: Magnetic moment</li>
-	<li><em><em>J<sub>ij</sub></em></em>: Spin interaction</li>
+    <li><em>N</em>: Size of grid</li>
+    <li><em>neighs</em>: Number of neighbours (3, 4, 6)</li>
+    <li><em>v</em>: Speed of animation</li>
+    <li><em>T</em>: Temperature of simulation</li>
+    <li><em>μ</em>: Magnetic moment</li>
+    <li><em><em>J<sub>ij</sub></em></em>: Spin interaction</li>
 </ul>
 <script src="anneal.js"></script>
 </html>

@@ -18,8 +18,8 @@ const a = 1664525;
 const c = 1013904223;
 const m = 2 ** 32
 function rng() {
-	x = (a * x + c) % m;
-	return x / m;
+    x = (a * x + c) % m;
+    return x / m;
 }
 
 
@@ -39,17 +39,17 @@ let freq;
 let neighs;
 let R, C;
 function updater() {
-	temp = maxTemp * tempSlider.value / 1000;
-	tempDisplay.innerHTML = temp;
+    temp = maxTemp * tempSlider.value / 1000;
+    tempDisplay.innerHTML = temp;
 
-	field = (fieldSlider.value - 50) / 50;
-	fieldDisplay.innerHTML = field;
+    field = (fieldSlider.value - 50) / 50;
+    fieldDisplay.innerHTML = field;
 
-	inter = interSlider.value;
-	interDisplay.innerHTML = inter;
+    inter = interSlider.value;
+    interDisplay.innerHTML = inter;
 
-	freq = minFreq * 2 ** (10 * (1 - freqSlider.value / 100));
-	freqDisplay.innerHTML = (1 / freq).toFixed(2);
+    freq = minFreq * 2 ** (10 * (1 - freqSlider.value / 100));
+    freqDisplay.innerHTML = (1 / freq).toFixed(2);
 
     C = 4 * (3 + (sizeSlider.value * 2));
     if (neighsSlider.value == 0) {
@@ -63,8 +63,8 @@ function updater() {
         R = C;
     }
     neighsDisplay.innerHTML = neighs;
-	sizeDisplay.innerHTML = C;
-	pixelSize = screenEdge / C;
+    sizeDisplay.innerHTML = C;
+    pixelSize = screenEdge / C;
 }
 tempSlider.oninput = updater;
 fieldSlider.oninput = updater;
@@ -221,7 +221,7 @@ function somethingHasChanged() {
 
 
 function sleep(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
